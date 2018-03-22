@@ -20,7 +20,7 @@ public class BlockingQueue extends UnboundedQueue{
     }
 
     // FIXME: no synchronized keyword
-    public void enq(int i){
+    public void enq(int i, int tID){
         boolean mustWakeDequeuers = false;
         enqLock.lock();
         try {
@@ -29,9 +29,10 @@ public class BlockingQueue extends UnboundedQueue{
 
             // add new node to queue
             BNode e = new BNode(i);
-            e.enqTime = System.currentTimeMillis();
+            e.enqThreadId = tID;
             tail.next = e;
-            System.out.println("enqueue: " + i);
+            e.enqTime = System.currentTimeMillis();
+//            System.out.println("enqueue: " + i);
             tail = e;
         } finally {
             enqLock.unlock();
@@ -53,7 +54,7 @@ public class BlockingQueue extends UnboundedQueue{
 
 
 
-    public Node deq() throws InterruptedException{
+    public Node deq(int tID) throws InterruptedException{
         BNode result;
         deqLock.lock();
         try {
@@ -63,9 +64,10 @@ public class BlockingQueue extends UnboundedQueue{
             }
 
             result = head.next;
-            System.out.println("dequeue " + result.id);
-            result.deqTime = System.currentTimeMillis();
             head = head.next;
+            result.deqThreadId = tID;
+//            System.out.println("dequeue " + result.id);
+            result.deqTime = System.currentTimeMillis();
         } finally {
             deqLock.unlock();
         }

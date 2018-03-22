@@ -22,7 +22,7 @@ public class Dequeuer implements Runnable{
     public void run() {
         while (itemCnt < n){
             try{
-                Node n = queue.deq();
+                Node n = queue.deq(id);
                 dequeuedItems[id][itemCnt] = n;
                 itemCnt++;
                 Thread.sleep(ThreadLocalRandom.current().nextInt(7, 13));

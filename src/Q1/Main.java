@@ -1,5 +1,7 @@
 package Q1;
 
+import java.util.Arrays;
+
 import static java.lang.System.exit;
 
 /**
@@ -9,6 +11,10 @@ public class Main {
     public static int p, q, n;
     public static Node[][] dequeuedItems; // where all dequeue threads store dequeued items
     public static UnboundedQueue queue;
+
+    // action type
+    public static final int ENQ = 1;
+    public static final int DEQ = 2;
 
 
     public static void main(String[] args) {
@@ -30,11 +36,17 @@ public class Main {
                 exit(-1);
             }
 
+
+
+
             Thread[] enqueuers = new Thread[p];
             Thread[] dequeuers = new Thread[q];
             dequeuedItems = new Node[q][n];
             queue = questionNumber == 1? new BlockingQueue() : new LockFreeQueue();
 
+            System.out.println("================================================");
+            System.out.println("==================INIT THREADS==================");
+            System.out.println("====================RUNNING=====================");
             // init enqueuers
             for (int i = 0; i< p; i++){
                 Thread e = new Thread(new Enqueuer(i));
@@ -58,13 +70,38 @@ public class Main {
             }
 
 
-
+            System.out.println("=====================DONE=======================");
+            System.out.println("================================================");
+            System.out.println("======================LOG=======================");
             // TODO: process output
-            System.out.println("done");
+            processLog();
 
         }catch (Exception e){
             e.printStackTrace();
             exit(1);
         }
     }
+
+    public static void processLog(){
+        // q dequeue threads, each dequeue n items, each items have 2 actions (enq, deq)
+        Action[] log = new Action[q*n*2];
+        int ai = 0;
+        for (int i = 0; i < q; i++){
+            for (int j = 0; j < n; j++){
+                log[ai++] = new Action(dequeuedItems[i][j].enqTime, ENQ, dequeuedItems[i][j].id, dequeuedItems[i][j].enqThreadId);
+                log[ai++] = new Action(dequeuedItems[i][j].deqTime, DEQ, dequeuedItems[i][j].id, dequeuedItems[i][j].deqThreadId);
+            }
+        }
+        Arrays.sort(log);
+
+        // print
+        for (Action i : log){
+            System.out.println(i);
+        }
+    }
+
+
+
 }
+
+

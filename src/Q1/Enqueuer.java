@@ -21,8 +21,8 @@ public class Enqueuer implements Runnable {
     public void run() {
         try{
             while (!Thread.interrupted()){
-                int id = getNextItemId();
-                queue.enq(id);
+                int itemId = getNextItemId();
+                queue.enq(itemId, id);
                 Thread.sleep(ThreadLocalRandom.current().nextInt(7, 13));
             }
         }catch (InterruptedException e){

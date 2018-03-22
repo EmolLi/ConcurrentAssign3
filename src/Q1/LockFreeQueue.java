@@ -20,7 +20,7 @@ public class LockFreeQueue extends UnboundedQueue {
     }
 
     // FIXME: no synchronized keyword
-    public void enq(int i){
+    public void enq(int i, int tID){
         boolean mustWakeDequeuers = false;
         enqLock.lock();
         try {
@@ -53,7 +53,7 @@ public class LockFreeQueue extends UnboundedQueue {
 
 
 
-    public Node deq() throws InterruptedException{
+    public Node deq(int tID) throws InterruptedException{
         LNode result;
         deqLock.lock();
         try {

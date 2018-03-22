@@ -85,19 +85,43 @@ public class Main {
     public static void processLog(){
         // q dequeue threads, each dequeue n items, each items have 2 actions (enq, deq)
         Action[] log = new Action[q*n*2];
+        //test
+//        Action[] deqLog = new Action[q*n];
+//        Action[] enLog = new Action[q*n];
         int ai = 0;
+//        int bi = 0;
         for (int i = 0; i < q; i++){
             for (int j = 0; j < n; j++){
+//                enLog[bi] = new Action(dequeuedItems[i][j].enqTime, ENQ, dequeuedItems[i][j].id, dequeuedItems[i][j]
+//                        .enqThreadId);
+//                deqLog[bi++] = new Action(dequeuedItems[i][j].deqTime, DEQ, dequeuedItems[i][j].id, dequeuedItems[i][j]
+//                        .deqThreadId);
                 log[ai++] = new Action(dequeuedItems[i][j].enqTime, ENQ, dequeuedItems[i][j].id, dequeuedItems[i][j].enqThreadId);
                 log[ai++] = new Action(dequeuedItems[i][j].deqTime, DEQ, dequeuedItems[i][j].id, dequeuedItems[i][j].deqThreadId);
             }
         }
         Arrays.sort(log);
-
+//        Arrays.sort(enLog);
+//        Arrays.sort(deqLog);
         // print
+
         for (Action i : log){
             System.out.println(i);
         }
+/*
+    for(Action i : enLog){
+        System.out.println(i);
+    }
+    for(Action j : deqLog){
+        System.out.println(j);
+    }
+        for (int i = 0; i< q*n; i++){
+            if (enLog[i].id != deqLog[i].id ) {
+                System.err.println(enLog[i]);
+                System.err.println(deqLog[i]);
+            }
+
+        }*/
     }
 
 

@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class BlockingQueue extends UnboundedQueue{
     ReentrantLock enqLock, deqLock;
     Condition notEmptyCondition;
-    BNode head, tail;
+    volatile BNode head, tail;      // FIXME: is this volatile necessary?
 
     public BlockingQueue(){
         head = new BNode(-1);   // sentinel node

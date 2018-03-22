@@ -9,10 +9,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LockFreeQueue extends UnboundedQueue {
     ReentrantLock enqLock, deqLock;
     Condition notEmptyCondition;
-    BNode head, tail;
+    LNode head, tail;
 
     public LockFreeQueue(){
-        head = new BNode(-1);   // sentinel node
+        head = new LNode(-1);   // sentinel node
         tail = head;
         enqLock = new ReentrantLock();
         deqLock = new ReentrantLock();
@@ -28,7 +28,7 @@ public class LockFreeQueue extends UnboundedQueue {
             if (tail == head) mustWakeDequeuers = true;
 
             // add new node to queue
-            BNode e = new BNode(i);
+            LNode e = new LNode(i);
             e.enqTime = System.currentTimeMillis();
             tail.next = e;
             System.out.println("enqueue: " + i);
@@ -54,7 +54,7 @@ public class LockFreeQueue extends UnboundedQueue {
 
 
     public Node deq() throws InterruptedException{
-        BNode result;
+        LNode result;
         deqLock.lock();
         try {
             while (head.next == null){

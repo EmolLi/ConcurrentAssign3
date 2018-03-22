@@ -1,5 +1,7 @@
 package Q1;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static Q1.Main.dequeuedItems;
 import static Q1.Main.n;
 import static Q1.Main.queue;
@@ -21,7 +23,9 @@ public class Dequeuer implements Runnable{
         while (itemCnt < n){
             try{
                 Node n = queue.deq();
-                dequeuedItems[n.id] = n;
+                dequeuedItems[id][itemCnt] = n;
+                itemCnt++;
+                Thread.sleep(ThreadLocalRandom.current().nextInt(7, 13));
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

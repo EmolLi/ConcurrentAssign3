@@ -7,8 +7,10 @@ import static java.lang.System.exit;
  */
 public class Main {
     public static int p, q, n;
-    public static Node[] dequeuedItems; // where all dequeue threads store dequeued items
+    public static Node[][] dequeuedItems; // where all dequeue threads store dequeued items
     public static UnboundedQueue queue;
+
+
     public static void main(String[] args) {
         try {
             if (args.length < 4)
@@ -30,7 +32,7 @@ public class Main {
 
             Thread[] enqueuers = new Thread[p];
             Thread[] dequeuers = new Thread[q];
-            dequeuedItems = new Node[(q+2)*n];  // use more space to make sure no overflow
+            dequeuedItems = new Node[q][n];
             queue = questionNumber == 1? new BlockingQueue() : new LockFreeQueue();
 
             // init enqueuers

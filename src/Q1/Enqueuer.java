@@ -1,5 +1,7 @@
 package Q1;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import static Q1.Main.p;
 import static Q1.Main.queue;
 
@@ -17,10 +19,16 @@ public class Enqueuer implements Runnable {
 
     @Override
     public void run() {
-        while (!Thread.interrupted()){
-            int id = getNextItemId();
-            queue.enq(id);
+        try{
+            while (!Thread.interrupted()){
+                int id = getNextItemId();
+                queue.enq(id);
+                Thread.sleep(ThreadLocalRandom.current().nextInt(7, 13));
+            }
+        }catch (InterruptedException e){
+            return;
         }
+
     }
 
 

@@ -1,14 +1,12 @@
 package Q1;
 
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by emol on 3/22/18.
  */
 public class LockFreeQueue extends UnboundedQueue {
-    volatile AtomicReference<LNode> head, tail;
+    AtomicReference<LNode> head, tail;  // FIXME: volatile here?
 
     public LockFreeQueue() {
         LNode headNode = new LNode(-1);
@@ -66,7 +64,7 @@ public class LockFreeQueue extends UnboundedQueue {
 
 
 class LNode extends Node{
-    public volatile AtomicReference<LNode> next;
+    public AtomicReference<LNode> next;
     public LNode(int id) {
         this.id = id;
         next = new AtomicReference<>(null);

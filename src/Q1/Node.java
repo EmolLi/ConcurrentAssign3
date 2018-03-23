@@ -9,5 +9,4 @@ public abstract class Node {
     public int enqThreadId;
     public long deqTime;
     public int deqThreadId;
-    public Node next;
 }

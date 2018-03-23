@@ -17,7 +17,7 @@ class Action implements Comparable<Action>{
 
     @Override
     public int compareTo(Action o) {
-        return (int)(this.timeStamp - o.timeStamp);
+        return (this.timeStamp - o.timeStamp > 0 ? 1 : this.timeStamp - o.timeStamp == 0? 0 : -1);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class BlockingQueue extends UnboundedQueue{
             BNode e = new BNode(i);
             e.enqThreadId = tID;
             tail.next = e;
-            e.enqTime = System.currentTimeMillis();
+            e.enqTime = System.nanoTime();
 //            System.out.println("enqueue: " + i);
             tail = e;
         } finally {
@@ -67,7 +67,7 @@ public class BlockingQueue extends UnboundedQueue{
             head = head.next;
             result.deqThreadId = tID;
 //            System.out.println("dequeue " + result.id);
-            result.deqTime = System.currentTimeMillis();
+            result.deqTime = System.nanoTime();
         } finally {
             deqLock.unlock();
         }

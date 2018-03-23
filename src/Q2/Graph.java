@@ -1,9 +1,11 @@
 package Q2;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 import static Q2.Main.e;
 import static Q2.Main.n;
+import static Q2.Main.t;
 
 /**
  * Created by emol on 3/23/18.
@@ -11,6 +13,7 @@ import static Q2.Main.n;
 public class Graph {
     int[] colors;   // color of nodes, for node i, its color is colors[i]
     LinkedList<Integer> g[];    // graph, used adjacen
+    boolean[] conflict;     // conflict set
 
     public Graph(){
         this.colors = new int[n];    // all nodes have initial color 0
@@ -18,6 +21,7 @@ public class Graph {
         for (int i = 0; i < n; i++){
             this.g[i] = new LinkedList<>();
         }
+        Arrays.fill(conflict, true);    // at first all nodes are in conflict set
         System.out.println("generating graph");
         generateGraph();
     }
@@ -58,6 +62,18 @@ public class Graph {
         this.g[v1].add(v2);
         this.g[v2].add(v1);
     }
+
+    public boolean containsConflict(){
+        for (boolean b: conflict){
+            if (b) return true;
+        }
+        return false;
+    }
+
+    public void clearConflictSet(){
+        Arrays.fill(conflict, false);
+    }
+
 /*
     public void testGraph(){
         colorNode(0);

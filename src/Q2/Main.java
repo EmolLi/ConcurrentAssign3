@@ -1,5 +1,7 @@
 package Q2;
 
+import Q1.Dequeuer;
+
 import static java.lang.System.exit;
 
 /**
@@ -28,6 +30,8 @@ public class Main {
 
             graph = new Graph();
 //            graph.testGraph();
+            colorGraph();
+
 
 
 
@@ -35,6 +39,30 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
             exit(1);
+        }
+    }
+
+
+    public static void colorGraph() throws InterruptedException{
+        Thread[] threads = new Thread[t];
+        while (graph.containsConflict()){
+            for (int i = 0; i< t; i++){
+                threads[i] = new Thread(new AssignColor(i));
+            }
+
+            // join
+            for (int i = 0; i< t; i++){
+                threads[i].join();
+            }
+
+            graph.clearConflictSet();
+
+            for (int i = 0; i < t; i++){
+                threads[i] = new Thread(new DetectConflict(i));
+            }
+            for (int i = 0; i< t; i++){
+                threads[i].join();
+            }
         }
     }
 }

@@ -37,12 +37,12 @@ public class AssignColor implements Runnable{
     private void assignSmallestColor(int node){
         HashSet<Integer> neigborColors = new HashSet<>();
         for (int neighbor : graph.g[node]){
-            neigborColors.add(graph.colors[neighbor]);
+            neigborColors.add(graph.colors.get(neighbor));
         }
 
         for (int i = 0; i < n; i ++){
             if (!neigborColors.contains(i)){
-                graph.colors[node] = i;
+                graph.colors.set(node, i);
                 break;
             }
         }

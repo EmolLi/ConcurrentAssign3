@@ -2,6 +2,8 @@ package Q2;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import static Q2.Main.e;
 import static Q2.Main.n;
@@ -9,18 +11,25 @@ import static Q2.Main.t;
 
 /**
  * Created by emol on 3/23/18.
+ * FIXME: Should I use atomicIntegerArray for colors?
+ * Is the my way to partition nodes correct?
+ * Why should I add nodes to conflict set atomically? Why will there be conflicts
  */
 public class Graph {
-    int[] colors;   // color of nodes, for node i, its color is colors[i]
+    AtomicIntegerArray colors;   // color of nodes, for node i, its color is colors[i]
     LinkedList<Integer> g[];    // graph, used adjacen
     boolean[] conflict;     // conflict set
+    AtomicBoolean[] newConflict;    // new conflict set
 
     public Graph(){
-        this.colors = new int[n];    // all nodes have initial color 0
+        this.colors = new AtomicIntegerArray(n);    // all nodes have initial color 0
         this.g = new LinkedList[n];
         for (int i = 0; i < n; i++){
             this.g[i] = new LinkedList<>();
         }
+        this.conflict = new boolean[n];
+        this.newConflict = new AtomicBoolean[n];
+        Arrays.fill(newConflict, new AtomicBoolean(false));
         Arrays.fill(conflict, true);    // at first all nodes are in conflict set
         System.out.println("generating graph");
         generateGraph();
@@ -70,8 +79,11 @@ public class Graph {
         return false;
     }
 
-    public void clearConflictSet(){
-        Arrays.fill(conflict, false);
+    public void restartColoring(){
+        for (int i = 0; i < n; i++){
+            conflict[i] = newConflict[i].get();
+            newConflict[i].set(false);
+        }
     }
 
 /*

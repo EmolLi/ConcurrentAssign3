@@ -28,16 +28,19 @@ public class Main {
                 throw new Exception("Too few edges for the graph.");
             }
 
+            System.out.println("=================INIT GRAPH================");
             graph = new Graph();
 //            graph.testGraph();
+            System.out.println("================COLOR GRAPH================");
             colorGraph();
-
+            System.out.println("=====================DONE==================");
 
 
 
 
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("asdfa");
             exit(1);
         }
     }
@@ -45,9 +48,12 @@ public class Main {
 
     public static void colorGraph() throws InterruptedException{
         Thread[] threads = new Thread[t];
+        int itr = 1;
         while (graph.containsConflict()){
+            System.err.println("itr: " + itr);
             for (int i = 0; i< t; i++){
                 threads[i] = new Thread(new AssignColor(i));
+                threads[i].start();
             }
 
             // join
@@ -55,14 +61,16 @@ public class Main {
                 threads[i].join();
             }
 
-            graph.clearConflictSet();
-
             for (int i = 0; i < t; i++){
                 threads[i] = new Thread(new DetectConflict(i));
+                threads[i].start();
             }
             for (int i = 0; i< t; i++){
                 threads[i].join();
             }
+
+            graph.restartColoring();
+            itr++;
         }
     }
 }

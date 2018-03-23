@@ -22,9 +22,9 @@ public class DetectConflict implements Runnable {
         // for nodes in its partition
         for (int i =  n / t * id ; i < n / t * (id + 1); i++){
             for (int neighbor : graph.g[i]){
-                if (graph.colors[i] == graph.colors[neighbor]){
+                if (graph.colors.get(i) == graph.colors.get(neighbor)){
                     // add i to conflict set
-                    graph.conflict[i] = true;
+                    graph.newConflict[i].set(true);
                 }
             }
         }

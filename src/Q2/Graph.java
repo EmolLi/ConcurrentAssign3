@@ -18,8 +18,8 @@ import static Q2.Main.t;
 public class Graph {
     AtomicIntegerArray colors;   // color of nodes, for node i, its color is colors[i]
     LinkedList<Integer> g[];    // graph, used adjacen
-    boolean[] conflict;     // conflict set
-    AtomicBoolean[] newConflict;    // new conflict set
+    volatile AtomicBoolean[] conflict;     // conflict set
+//    volatile AtomicBoolean[] newConflict;    // new conflict set
 
     public Graph(){
         this.colors = new AtomicIntegerArray(n);    // all nodes have initial color 0
@@ -27,27 +27,25 @@ public class Graph {
         for (int i = 0; i < n; i++){
             this.g[i] = new LinkedList<>();
         }
-        this.conflict = new boolean[n];
-        this.newConflict = new AtomicBoolean[n];
-        Arrays.fill(newConflict, new AtomicBoolean(false));
-        Arrays.fill(conflict, true);    // at first all nodes are in conflict set
+//        this.conflict = new boolean[n];
+        this.conflict= new AtomicBoolean[n];
+        Arrays.fill(conflict, new AtomicBoolean(true));
+//        Arrays.fill(conflict, true);    // at first all nodes are in conflict set
         System.out.println("generating graph");
         generateGraph();
     }
 
 /*
     or each node you need at least one edge.
-
     Start with one node. In each iteration, create a new node and a new edge. The edge is to connect the new node with a random node from the previous node set.
-
     After all nodes are created, create random edges until S is fulfilled. Make sure not to create double edges (for this you can use an adjacency matrix).
 */
 
     private void generateGraph(){
         for (int i = 1; i < n ; i++){
 //            Start with one node. In each iteration, create a new node and a new edge. The edge is to connect the new node with a random node from the previous node set.
-            int neighbor = (int) (Math.random() * i);   // previous node set : [0 ~ i-1]
-            // add undirected edge
+            int neighbor = (int) Math.floor(Math.random() * i);   // previous node set : [0 ~ i-1]
+            // / add undirected edge
             addEdge(i, neighbor);
         }
         // random choose two nodes for the rest edges
@@ -56,9 +54,9 @@ public class Graph {
             int v2 = -1;
             boolean validEdge = false;
             while (!validEdge){
-                v1 = (int) (Math.random() * n);
-                v2 = (int) (Math.random() * n);
-                if (!g[v1].contains(v2)) validEdge = true;
+                v1 = (int) Math.floor(Math.random() * n);
+                v2 = (int) Math.floor(Math.random() * n);
+                if (!g[v1].contains(v2) && v1 != v2) validEdge = true;
             }
             addEdge(v1, v2);
         }
@@ -73,17 +71,18 @@ public class Graph {
     }
 
     public boolean containsConflict(){
-        for (boolean b: conflict){
-            if (b) return true;
+        for (AtomicBoolean b: conflict){
+            if (b.get()) return true;
         }
         return false;
     }
 
     public void restartColoring(){
+        /*
         for (int i = 0; i < n; i++){
             conflict[i] = newConflict[i].get();
             newConflict[i].set(false);
-        }
+        }*/
     }
 
 /*

@@ -2,6 +2,8 @@ package Q2;
 
 import Q1.Dequeuer;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static java.lang.System.exit;
 
 /**
@@ -50,7 +52,7 @@ public class Main {
         Thread[] threads = new Thread[t];
         int itr = 1;
         while (graph.containsConflict()){
-            System.err.println("itr: " + itr);
+            System.out.println("itr: " + itr);
             for (int i = 0; i< t; i++){
                 threads[i] = new Thread(new AssignColor(i));
                 threads[i].start();
@@ -61,6 +63,10 @@ public class Main {
                 threads[i].join();
             }
 
+
+            for (AtomicBoolean b : graph.conflict){
+                b.set(false);
+            }
             for (int i = 0; i < t; i++){
                 threads[i] = new Thread(new DetectConflict(i));
                 threads[i].start();
@@ -69,7 +75,7 @@ public class Main {
                 threads[i].join();
             }
 
-            graph.restartColoring();
+//            graph.restartColoring();
             itr++;
         }
     }

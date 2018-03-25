@@ -28,23 +28,21 @@ public class AssignColor implements Runnable{
         // for nodes in its partition
         for (int i =  n / t * id ; i < n / t * (id + 1); i++){
             // if the node is in conflict set
-            if (graph.conflict[i]){
+            if (graph.conflict[i].get()){
                 assignSmallestColor(i);
             }
         }
     }
 
     private void assignSmallestColor(int node){
-        HashSet<Integer> neigborColors = new HashSet<>();
-        for (int neighbor : graph.g[node]){
-            neigborColors.add(graph.colors.get(neighbor));
-        }
-
-        for (int i = 0; i < n; i ++){
-            if (!neigborColors.contains(i)){
-                graph.colors.set(node, i);
-                break;
+        colorLoop: for (int color = 0; color < n; color++){
+            inner: for (int neigbor : graph.g[node]){
+                if (graph.colors.get(neigbor) == color){
+                    continue colorLoop;
+                }
             }
+            graph.colors.set(node, color);
+            break colorLoop;
         }
     }
 }

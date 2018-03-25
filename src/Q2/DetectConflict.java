@@ -24,7 +24,8 @@ public class DetectConflict implements Runnable {
             for (int neighbor : graph.g[i]){
                 if (graph.colors.get(i) == graph.colors.get(neighbor)){
                     // add i to conflict set
-                    graph.newConflict[i].set(true);
+                    System.out.println(i + ", " + neighbor);
+                    graph.conflict[i].set(true);
                 }
             }
         }
